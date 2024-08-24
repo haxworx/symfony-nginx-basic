@@ -1,0 +1,42 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: php-nginx
+    build:
+      context: .docker/nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - .docker/nginx/default.conf:/etc/nginx/conf.d
+      - ./:/code
+    working_dir: /code
+    depends_on:
+      - php-fpm
+
+  php-fpm:
+    container_name: php-fpm
+    build:
+      context: .docker/php-fpm
+    working_dir: /code
+    volumes:
+      - ./:/code
+    ports:
+      - "9000:9000"
+
+  database:
+    container_name: mysql-database
+    image: mysql
+    build:
+      context: .docker/database
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=username
+      - MYSQL_PASSWORD=password
+      - MYSQL_DATABASE=database
+    volumes:
+      - database_data:/var/lib/mysql:rw
+    ports:
+      - "3306:3306"
+
+volumes:
+  database_data:

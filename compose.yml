@@ -1,6 +1,5 @@
 services:
   nginx:
-    image: nginx:latest
     container_name: php-nginx
     build:
       context: .docker/nginx
@@ -25,7 +24,6 @@ services:
 
   database:
     container_name: mysql-database
-    image: mysql
     build:
       context: .docker/database
     environment:
